@@ -1,0 +1,94 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { products } from '../data/products';
+
+const categories = ["All", ...Array.from(new Set(products.map((p) => p.category)))];
+---
+
+<Layout title="Products — PawKasa" description="Explore PawKasa's premium cat scratching boards and care products.">
+  <Header />
+  <main class="flex-1 min-h-screen flex flex-col bg-background">
+    <section class="bg-brand-orange">
+      <div class="container mx-auto px-6 py-20 md:py-24">
+        <p class="text-sm font-medium uppercase tracking-widest text-brand-ink/70">Products</p>
+        <h1 class="mt-4 font-display font-bold text-5xl md:text-7xl text-brand-ink leading-[0.95] max-w-3xl">
+          Designed for cats. Loved by people.
+        </h1>
+        <p class="mt-6 text-lg text-brand-ink/80 max-w-2xl">
+          Premium scratching boards and care essentials — from our best-selling
+          designs to grooming tools trusted by millions of cat families.
+        </p>
+      </div>
+    </section>
+
+    <section class="container mx-auto px-6 py-12">
+      <div class="flex flex-wrap gap-2" id="category-filters">
+        {categories.map((c) => (
+          <button
+            data-category={c}
+            class="category-btn px-4 py-2 rounded-full text-sm font-medium border transition-colors bg-card text-brand-ink border-border hover:border-brand-ink"
+          >
+            {c}
+          </button>
+        ))}
+      </div>
+
+      <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="product-grid">
+        {products.map((p) => (
+          <article class="bg-muted rounded-3xl overflow-hidden group" data-product-category={p.category}>
+            <div class="aspect-square bg-card overflow-hidden">
+              <img
+                src={p.image}
+                alt={p.name}
+                loading="lazy"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+            </div>
+            <div class="p-6">
+              <div class="text-xs font-medium uppercase tracking-widest text-brand-blue">{p.category}</div>
+              <h3 class="mt-2 font-heading font-bold text-xl text-brand-ink">{p.name}</h3>
+              <p class="text-sm text-muted-foreground">{p.tagline}</p>
+              <p class="mt-3 text-sm text-muted-foreground line-clamp-3">{p.description}</p>
+              <div class="mt-5 flex items-center justify-between">
+                <div class="font-display font-bold text-2xl">${p.price.toFixed(2)}</div>
+                <button class="rounded-full bg-brand-orange text-white hover:bg-brand-orange/90 px-4 py-2 text-sm font-medium transition-colors">Add</button>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<script>
+  const buttons = document.querySelectorAll('.category-btn');
+  const cards = document.querySelectorAll('[data-product-category]');
+
+  buttons[0]?.classList.add('bg-brand-ink', 'text-brand-cream', 'border-brand-ink');
+  buttons[0]?.classList.remove('bg-card', 'text-brand-ink');
+
+  buttons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const category = (btn as HTMLElement).dataset.category;
+
+      buttons.forEach((b) => {
+        b.classList.remove('bg-brand-ink', 'text-brand-cream', 'border-brand-ink');
+        b.classList.add('bg-card', 'text-brand-ink');
+      });
+      btn.classList.add('bg-brand-ink', 'text-brand-cream', 'border-brand-ink');
+      btn.classList.remove('bg-card', 'text-brand-ink');
+
+      cards.forEach((card) => {
+        if (category === 'All' || (card as HTMLElement).dataset.productCategory === category) {
+          (card as HTMLElement).style.display = '';
+        } else {
+          (card as HTMLElement).style.display = 'none';
+        }
+      });
+    });
+  });
+</script>

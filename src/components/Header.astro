@@ -1,0 +1,72 @@
+---
+const nav = [
+  { to: "/", label: "Home" },
+  { to: "/about", label: "About us" },
+  { to: "/products", label: "Products" },
+  { to: "/contact", label: "Contact" },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="sticky top-0 z-50 bg-background/85 backdrop-blur-md border-b border-border">
+  <div class="bg-brand-orange text-white text-xs sm:text-sm py-2 text-center font-medium">
+    Free US Shipping on orders over $50
+  </div>
+  <div class="container mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+    <a href="/" class="font-display font-bold text-2xl tracking-tight text-brand-orange">
+      PawKasa
+    </a>
+    <nav class="hidden md:flex items-center gap-8">
+      {nav.map((n) => (
+        <a
+          href={n.to}
+          class:list={[
+            "text-sm font-semibold uppercase tracking-wide transition-colors",
+            currentPath === n.to || (n.to !== "/" && currentPath.startsWith(n.to))
+              ? "text-brand-ink"
+              : "text-muted-foreground hover:text-brand-ink",
+          ]}
+        >
+          {n.label}
+        </a>
+      ))}
+    </nav>
+    <div class="flex items-center gap-3">
+      <button aria-label="Search" class="p-2 hover:text-brand-orange transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      </button>
+      <button aria-label="Account" class="p-2 hover:text-brand-orange transition-colors hidden sm:inline-flex">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </button>
+      <button aria-label="Cart" class="p-2 hover:text-brand-orange transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      </button>
+      <button id="mobile-menu-btn" aria-label="Menu" class="md:hidden p-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/><line x1="4" x2="20" y1="6" y2="6"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="mobile-menu" class="hidden md:hidden border-t border-border bg-background">
+    <nav class="container mx-auto px-6 py-4 flex flex-col gap-3">
+      {nav.map((n) => (
+        <a
+          href={n.to}
+          class="py-2 text-base font-semibold uppercase tracking-wide"
+        >
+          {n.label}
+        </a>
+      ))}
+    </nav>
+  </div>
+</header>
+
+<script>
+  const btn = document.getElementById('mobile-menu-btn');
+  const menu = document.getElementById('mobile-menu');
+  if (btn && menu) {
+    btn.addEventListener('click', () => {
+      menu.classList.toggle('hidden');
+    });
+  }
+</script>
