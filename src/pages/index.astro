@@ -3,6 +3,20 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import SubscriptionPopup from '../components/SubscriptionPopup.astro';
+
+const categoryCharacters = [
+  { name: "Lil Peep", image: "/images/character/LIlPeep_main.png" },
+  { name: "Lala", image: "/images/character/Lala_main.png" },
+  { name: "Toto", image: "/images/character/Toto_main.png" },
+  { name: "Tracer", image: "/images/character/Tracer_main01.png" },
+  { name: "Udon", image: "/images/character/Udon_main.png" },
+];
+
+const categoryImages = categoryCharacters
+  .map((character) => ({ character, sort: Math.random() }))
+  .sort((a, b) => a.sort - b.sort)
+  .slice(0, 4)
+  .map(({ character }) => character);
 ---
 
 <Layout title="PawKasa — Premium Cat Scratching Boards">
@@ -10,7 +24,7 @@ import SubscriptionPopup from '../components/SubscriptionPopup.astro';
   <main class="flex-1 min-h-screen flex flex-col bg-background">
     {/* HERO */}
     <section class="relative overflow-hidden bg-brand-orange">
-      <div class="container mx-auto px-6 pt-12 pb-0 md:pt-20 grid md:grid-cols-2 gap-10 items-center">
+      <div class="container mx-auto grid gap-8 px-6 pb-10 pt-10 md:grid-cols-2 md:items-center md:gap-8 md:pb-14 md:pt-14 lg:gap-10 lg:pb-16 lg:pt-16">
         <div class="relative z-10">
           <span class="inline-block px-3 py-1 rounded-full bg-brand-ink text-brand-cream text-xs font-medium uppercase tracking-widest">
             Premium Cat Care
@@ -23,7 +37,7 @@ import SubscriptionPopup from '../components/SubscriptionPopup.astro';
             Designing every product with one core belief — nurturing
             empathy, communication, and harmony between cats and people.
           </p>
-          <div class="mt-8 flex flex-wrap gap-3">
+          <div class="mt-8 flex flex-wrap gap-3 md:mb-4">
             <a href="/products" class="inline-flex items-center justify-center bg-brand-ink text-brand-cream hover:bg-brand-ink/90 rounded-full h-12 px-7 text-sm font-medium transition-colors">
               Shop products
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
@@ -54,23 +68,11 @@ import SubscriptionPopup from '../components/SubscriptionPopup.astro';
         </div>
       </div>
 
-      {/* Marquee */}
-      <div class="mt-16 overflow-hidden border-y-4 border-brand-ink bg-brand-ink py-4">
-        <div class="flex marquee whitespace-nowrap text-brand-cream font-heading font-bold text-2xl uppercase tracking-wider">
-          {Array.from({ length: 2 }).map((_, i) => (
-            <div class="flex items-center gap-10 pr-10">
-              {["Cat Humanization", "★", "Premium Care", "★", "Global Best Sellers", "★", "Made for Cats", "★", "From Korea to the World", "★"].map((t, j) => (
-                <span key={`${i}-${j}`}>{t}</span>
-              ))}
-            </div>
-          ))}
-        </div>
-      </div>
     </section>
 
     {/* WHY PAWKASA */}
-    <section class="container mx-auto px-6 py-24">
-      <div class="mb-14">
+    <section class="container mx-auto px-6 py-14 md:py-16">
+      <div class="mb-8 md:mb-10">
         <p class="text-sm font-medium uppercase tracking-widest text-brand-orange">Why PawKasa</p>
         <h2 class="mt-3 font-heading font-bold text-4xl md:text-5xl text-brand-ink">
           Built for cats. Loved by homes.
@@ -79,160 +81,206 @@ import SubscriptionPopup from '../components/SubscriptionPopup.astro';
           Every detail is designed to satisfy your cat's instincts and fit beautifully into your life.
         </p>
       </div>
-      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div class="bg-card rounded-3xl p-8 border border-border text-center hover:shadow-soft transition-all group">
-          <div class="w-16 h-16 mx-auto rounded-2xl bg-brand-mint flex items-center justify-center text-3xl">
-            🌱
-          </div>
-          <h3 class="mt-6 font-heading font-bold text-xl text-brand-ink">Eco-friendly Materials</h3>
-          <p class="mt-3 text-sm text-muted-foreground leading-relaxed">
-            Made from recycled cardboard and non-toxic adhesives — safe for your cat and gentle on the planet.
-          </p>
-        </div>
-        <div class="bg-card rounded-3xl p-8 border border-border text-center hover:shadow-soft transition-all group">
-          <div class="w-16 h-16 mx-auto rounded-2xl bg-brand-cream flex items-center justify-center text-3xl">
-            🐾
-          </div>
-          <h3 class="mt-6 font-heading font-bold text-xl text-brand-ink">Scratch + Play + Hide</h3>
-          <p class="mt-3 text-sm text-muted-foreground leading-relaxed">
-            One product, three joys. A scratcher, a playground, and a cozy hideaway — all in a single design.
-          </p>
-        </div>
-        <div class="bg-card rounded-3xl p-8 border border-border text-center hover:shadow-soft transition-all group">
-          <div class="w-16 h-16 mx-auto rounded-2xl bg-brand-blue flex items-center justify-center text-3xl">
-            🏠
-          </div>
-          <h3 class="mt-6 font-heading font-bold text-xl text-brand-ink">Designed for Indoor Cats</h3>
-          <p class="mt-3 text-sm text-muted-foreground leading-relaxed">
-            Compact, stylish, and built for apartment life — because indoor cats deserve the best enrichment.
-          </p>
-        </div>
-        <div class="bg-card rounded-3xl p-8 border border-border text-center hover:shadow-soft transition-all group">
-          <div class="w-16 h-16 mx-auto rounded-2xl bg-brand-orange flex items-center justify-center text-3xl">
-            🔧
-          </div>
-          <h3 class="mt-6 font-heading font-bold text-xl text-brand-ink">Easy to Assemble</h3>
-          <p class="mt-3 text-sm text-muted-foreground leading-relaxed">
-            No tools, no frustration. Snap together in minutes and your cat is ready to explore.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    {/* SHOP BY CATEGORY */}
-    <section class="container mx-auto px-6 py-24">
-      <div class="text-center mb-14">
-        <p class="text-sm font-medium uppercase tracking-widest text-brand-orange">Shop by Category</p>
-        <h2 class="mt-3 font-heading font-bold text-4xl md:text-5xl text-brand-ink">
-          Find the perfect match.
-        </h2>
-      </div>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div class="overflow-hidden rounded-[2rem] border border-border bg-card shadow-sm">
         {[
-          { icon: "🏙️", name: "City Life", desc: "Urban essentials" },
-          { icon: "🏕️", name: "Wander Paws", desc: "Adventure ready" },
-          { icon: "🏈", name: "Game Day", desc: "Sport & play" },
-          { icon: "🎉", name: "Pawty Time", desc: "Celebrate fun" },
-        ].map((c) => (
-          <a href="/products" class="group bg-card rounded-3xl p-8 border border-border text-center hover:shadow-soft hover:border-brand-orange/40 transition-all">
-            <div class="text-5xl mb-4 group-hover:scale-110 transition-transform">{c.icon}</div>
-            <h3 class="font-heading font-bold text-xl text-brand-ink">{c.name}</h3>
-            <p class="mt-1 text-sm text-muted-foreground">{c.desc}</p>
-          </a>
-        ))}
-      </div>
-    </section>
-
-    {/* BEST SELLERS */}
-    <section class="bg-muted py-24">
-      <div class="container mx-auto px-6">
-        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-          <div>
-            <p class="text-sm font-medium uppercase tracking-widest text-brand-orange">Best Sellers</p>
-            <h2 class="mt-3 font-heading font-bold text-4xl md:text-5xl text-brand-ink">
-              Most loved by cat families.
-            </h2>
-          </div>
-          <a href="/products" class="self-start md:self-end inline-flex items-center font-medium hover:text-brand-orange transition-colors">
-            View all
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-          </a>
-        </div>
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-          {[
-            { name: "Metro Lounge Scratcher", category: "City Life", price: "29.99", sold: "12K+", image: "/images/product-clipper.jpg" },
-            { name: "Trail Blaze Scratcher", category: "Wander Paws", price: "24.99", sold: "9.5K+", image: "/images/product-spray.jpg" },
-            { name: "Touchdown Scratcher", category: "Game Day", price: "34.99", sold: "8.2K+", image: "/images/product-brush.jpg" },
-            { name: "Confetti Cat Scratcher", category: "Pawty Time", price: "27.99", sold: "7.8K+", image: "/images/product-comb.jpg" },
-          ].map((p) => (
-            <a href="/products" class="group bg-card rounded-3xl overflow-hidden hover:shadow-soft transition-all">
-              <div class="aspect-square bg-muted overflow-hidden">
-                <img
-                  src={p.image}
-                  alt={p.name}
-                  loading="lazy"
-                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-              </div>
-              <div class="p-4">
-                <div class="text-xs font-medium uppercase tracking-wider text-brand-blue">{p.category}</div>
-                <div class="mt-1 font-heading font-bold text-brand-ink line-clamp-2">{p.name}</div>
-                <div class="mt-2 flex items-center justify-between">
-                  <span class="font-display font-bold text-lg">${p.price}</span>
-                  <span class="text-xs text-muted-foreground">{p.sold} sold</span>
-                </div>
-              </div>
-            </a>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    {/* NEW ARRIVALS */}
-    <section class="container mx-auto px-6 py-24">
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-        <div>
-          <p class="text-sm font-medium uppercase tracking-widest text-brand-blue">New Arrivals</p>
-          <h2 class="mt-3 font-heading font-bold text-4xl md:text-5xl text-brand-ink">
-            Fresh drops for your cat.
-          </h2>
-        </div>
-        <a href="/products" class="self-start md:self-end inline-flex items-center font-medium hover:text-brand-orange transition-colors">
-          View all
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-        </a>
-      </div>
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-        {[
-          { name: "Calming Mist Spray", category: "City Life", price: "18.99", sold: "3.2K+", image: "/images/product-mist.jpg" },
-          { name: "Adventure Clipper Kit", category: "Wander Paws", price: "22.99", sold: "2.8K+", image: "/images/product-clipper.jpg" },
-          { name: "Stadium Scratcher Pro", category: "Game Day", price: "39.99", sold: "1.9K+", image: "/images/product-spray.jpg" },
-          { name: "Party Brush Set", category: "Pawty Time", price: "15.99", sold: "2.4K+", image: "/images/product-brush.jpg" },
-        ].map((p) => (
-          <a href="/products" class="group bg-muted rounded-3xl overflow-hidden hover:shadow-soft transition-all">
-            <div class="aspect-square bg-card overflow-hidden">
+          {
+            eyebrow: "Sustainable comfort",
+            title: "Eco-friendly materials",
+            text: "Made from recycled cardboard and non-toxic adhesives, each scratcher is safe for daily play and gentle on the planet.",
+            image: "/images/why-eco-materials.png",
+            imageAlt: "PawKasa scratching board materials arranged as a product flatlay",
+          },
+          {
+            eyebrow: "Instinct-led design",
+            title: "Scratch, play, and hide in one place",
+            text: "Layered forms give cats more than one reason to return: scratching texture, playful tunnels, and a cozy place to curl up.",
+            image: "/images/why-scratch-play-hide.png",
+            imageAlt: "A cat and dog sitting beside a soft yellow blanket",
+            reverse: true,
+          },
+          {
+            eyebrow: "Home-friendly scale",
+            title: "Designed for indoor cats",
+            text: "Compact silhouettes, warm colors, and furniture-like proportions make enrichment feel natural in apartments and shared rooms.",
+            image: "/images/why-indoor-cats.png",
+            imageAlt: "A cat resting calmly during gentle grooming",
+          },
+          {
+            eyebrow: "Simple setup",
+            title: "Easy to assemble",
+            text: "No tools, no stress. Pieces lock together quickly, so the product goes from box to cat-approved corner in minutes.",
+            image: "/images/why-easy-assemble.png",
+            imageAlt: "PawKasa product detail shown close up",
+            reverse: true,
+          },
+        ].map((item) => (
+          <article class={`group grid overflow-hidden border-b border-border last:border-b-0 transition-colors hover:bg-muted/40 md:grid-cols-2 ${item.reverse ? "md:[&>div:first-child]:order-2" : ""}`}>
+            <div class="flex min-h-[260px] flex-col justify-center p-7 md:min-h-[340px] md:p-10 lg:p-12">
+              <div class="mb-6 h-1.5 w-14 rounded-full bg-brand-orange transition-all duration-300 group-hover:w-20"></div>
+              <p class="text-xs font-medium uppercase tracking-widest text-brand-orange">
+                {item.eyebrow}
+              </p>
+              <h3 class="mt-3 font-heading text-3xl font-bold leading-tight text-brand-ink md:text-4xl">
+                {item.title}
+              </h3>
+              <p class="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
+                {item.text}
+              </p>
+            </div>
+            <div class="min-h-[240px] overflow-hidden bg-muted md:min-h-[340px]">
               <img
-                src={p.image}
-                alt={p.name}
+                src={item.image}
+                alt={item.imageAlt}
                 loading="lazy"
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
             </div>
-            <div class="p-4">
-              <div class="text-xs font-medium uppercase tracking-wider text-brand-blue">{p.category}</div>
-              <div class="mt-1 font-heading font-bold text-brand-ink line-clamp-2">{p.name}</div>
-              <div class="mt-2 flex items-center justify-between">
-                <span class="font-display font-bold text-lg">${p.price}</span>
-                <span class="text-xs text-muted-foreground">{p.sold} sold</span>
-              </div>
-            </div>
-          </a>
+          </article>
         ))}
+      </div>
+    </section>
+
+    {/* SHOP + PRODUCTS */}
+    <section class="container mx-auto px-6 py-10 md:py-12">
+      <div class="space-y-5">
+        <div class="rounded-[1.75rem] bg-card/70 px-4 py-4 shadow-sm md:px-5">
+          <div class="mb-3 flex items-end justify-between gap-3">
+            <div>
+            <p class="text-xs font-medium uppercase tracking-widest text-brand-orange">Shop by Category</p>
+            <h2 class="mt-1 font-heading text-2xl font-bold text-brand-ink md:text-3xl">
+              Cat favorites, all in one place.
+            </h2>
+            </div>
+            <a href="/products" class="hidden items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-brand-orange sm:inline-flex">
+              View all
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+          </div>
+          <div class="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+            {[
+              { name: "City Life", desc: "Urban essentials" },
+              { name: "Wander Paws", desc: "Adventure ready" },
+              { name: "Game Day", desc: "Sport & play" },
+              { name: "Pawty Time", desc: "Celebrate fun" },
+            ].map((c, index) => (
+              <a href="/products" class="group block overflow-hidden rounded-2xl border border-border/60 bg-background/70 p-2.5 text-center transition-all hover:border-brand-orange/30 hover:bg-background hover:shadow-soft">
+                <span class="flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-xl bg-muted/70">
+                  <img
+                    src={categoryImages[index].image}
+                    alt={`${categoryImages[index].name} character for ${c.name}`}
+                    loading="lazy"
+                    class="h-full w-full object-contain p-2 transition-transform duration-300 group-hover:scale-110 md:p-3"
+                  />
+                </span>
+                <span class="mt-2 block min-w-0">
+                  <span class="block truncate font-heading text-sm font-bold leading-tight text-brand-ink md:text-base">{c.name}</span>
+                  <span class="mt-0.5 block truncate text-[11px] text-muted-foreground md:text-xs">{c.desc}</span>
+                </span>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div class="rounded-[1.75rem] bg-card px-4 py-4 shadow-sm md:px-5 md:py-5">
+          <div class="mb-3 flex items-center justify-between gap-3">
+            <h3 class="font-heading text-2xl font-bold text-brand-ink md:text-3xl">Best Sellers</h3>
+            <a href="/products" class="inline-flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-brand-orange">
+              View all
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+          </div>
+          <div class="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+            {[
+              { name: "Metro Lounge Scratcher", rating: "1,203", price: "89.00", image: "/images/product-clipper.jpg" },
+              { name: "Trail Blaze Scratcher", rating: "956", price: "79.00", image: "/images/product-spray.jpg" },
+              { name: "Touchdown Scratcher", rating: "876", price: "49.00", image: "/images/product-brush.jpg" },
+              { name: "Confetti Cat Scratcher", rating: "654", price: "69.00", image: "/images/product-comb.jpg" },
+            ].map((p) => (
+              <a href="/products" class="group block">
+                <div class="aspect-[4/3] overflow-hidden rounded-xl bg-muted">
+                  <img
+                    src={p.image}
+                    alt={p.name}
+                    loading="lazy"
+                    class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+                <div class="mt-2">
+                  <div class="font-heading text-sm font-bold leading-tight text-brand-ink line-clamp-1">{p.name}</div>
+                  <div class="mt-1 flex items-center gap-1 text-[11px] text-muted-foreground">
+                    <span class="text-brand-orange">★★★★★</span>
+                    <span>({p.rating})</span>
+                  </div>
+                  <div class="mt-1 font-display text-sm font-bold text-brand-ink">${p.price}</div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div class="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(240px,0.38fr)]">
+          <div class="rounded-[1.75rem] bg-card px-4 py-4 shadow-sm md:px-5 md:py-5">
+            <div class="mb-3 flex items-center justify-between gap-3">
+              <h3 class="font-heading text-2xl font-bold text-brand-ink md:text-3xl">New Arrivals</h3>
+              <a href="/products" class="inline-flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-brand-orange">
+                View all
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </a>
+            </div>
+            <div class="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+              {[
+                { name: "PawKasa Loft", price: "89.00", image: "/images/product-mist.jpg" },
+                { name: "Meow Wave Scratcher", price: "39.00", image: "/images/product-clipper.jpg" },
+                { name: "Cozy Nest Bed", price: "49.00", image: "/images/product-spray.jpg" },
+                { name: "Cat Hammock", price: "29.00", image: "/images/product-brush.jpg" },
+              ].map((p) => (
+                <a href="/products" class="group relative block">
+                  <span class="absolute left-2 top-2 z-10 rounded-full bg-brand-cream px-2 py-0.5 text-[10px] font-bold uppercase text-brand-ink">
+                    New
+                  </span>
+                  <div class="aspect-square overflow-hidden rounded-xl bg-muted">
+                    <img
+                      src={p.image}
+                      alt={p.name}
+                      loading="lazy"
+                      class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
+                  <div class="mt-2">
+                    <div class="font-heading text-sm font-bold leading-tight text-brand-ink line-clamp-1">{p.name}</div>
+                    <div class="mt-1 font-display text-sm font-bold text-brand-ink">${p.price}</div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <a href="/products" class="group relative flex min-h-[260px] overflow-hidden rounded-[1.75rem] bg-gradient-to-br from-[#ffe1a8] via-[#ffd88a] to-[#ffc96b] p-6 shadow-sm transition-transform hover:-translate-y-0.5">
+            <div class="relative z-10 flex max-w-[220px] flex-col items-start">
+              <p class="text-sm font-bold text-brand-ink/70">Limited Time Offer!</p>
+              <h3 class="mt-5 font-heading text-3xl font-bold leading-tight text-brand-ink md:text-4xl">
+                Get 10% OFF Your First Order
+              </h3>
+              <span class="mt-6 inline-flex items-center gap-2 rounded-full bg-brand-orange px-5 py-3 text-sm font-bold text-white transition-colors group-hover:bg-brand-ink">
+                Shop Now
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </span>
+            </div>
+            <img
+              src="/images/character/LIlPeep_main.png"
+              alt="PawKasa cat character"
+              loading="lazy"
+              class="absolute bottom-0 right-2 h-36 w-36 object-contain transition-transform duration-500 group-hover:scale-105 md:h-44 md:w-44"
+            />
+            <div class="absolute -right-10 top-8 h-40 w-40 rounded-full bg-white/20"></div>
+            <div class="absolute bottom-8 right-20 text-3xl text-brand-orange/60">♡</div>
+          </a>
+        </div>
       </div>
     </section>
 
     {/* WHY WE BUILT PAWKASA */}
-    <section class="container mx-auto px-6 py-24 grid md:grid-cols-2 gap-12 items-center">
+    <section class="container mx-auto px-6 py-14 md:py-16 grid md:grid-cols-2 gap-8 lg:gap-10 items-center">
       <div>
         <p class="text-sm font-medium uppercase tracking-widest text-brand-blue">Why we built PawKasa</p>
         <h2 class="mt-3 font-heading font-bold text-4xl md:text-5xl leading-tight text-brand-ink">
@@ -258,8 +306,8 @@ import SubscriptionPopup from '../components/SubscriptionPopup.astro';
     </section>
 
     {/* CUSTOMER REVIEWS */}
-    <section class="container mx-auto px-6 py-24">
-      <div class="text-center mb-14">
+    <section class="container mx-auto px-6 py-12 md:py-14">
+      <div class="text-center mb-8 md:mb-10">
         <p class="text-sm font-medium uppercase tracking-widest text-brand-orange flex items-center justify-center gap-2">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
           Customer Reviews
@@ -268,72 +316,86 @@ import SubscriptionPopup from '../components/SubscriptionPopup.astro';
           Loved by real cats & their humans.
         </h2>
       </div>
-      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
         {[
           {
             name: "Sophie L.",
-            avatar: "/images/product-clipper.jpg",
+            avatar: "/images/review-avatar-1.png",
+            photo: "/images/review-scene-1.png",
             rating: 5,
             product: "Metro Lounge Scratcher",
             text: "My cat hasn't touched his old scratcher since this arrived. The design is so sleek it actually looks like furniture, not a pet product. Worth every penny.",
           },
           {
             name: "Jun K.",
-            avatar: "/images/product-spray.jpg",
+            avatar: "/images/review-avatar-2.png",
+            photo: "/images/review-scene-2.png",
             rating: 5,
             product: "Trail Blaze Scratcher",
             text: "Ordered from Seoul and arrived in perfect condition. Assembly took 2 minutes. My two cats fight over who gets to use it first. Already buying a second one.",
           },
           {
             name: "Maria G.",
-            avatar: "/images/product-brush.jpg",
+            avatar: "/images/review-avatar-1.png",
+            photo: "/images/review-scene-3.png",
             rating: 5,
             product: "Touchdown Scratcher",
             text: "Finally a scratcher that doesn't shed cardboard everywhere. The corrugated layers are incredibly dense — three months in and barely any wear. Amazing quality.",
           },
           {
             name: "Hana P.",
-            avatar: "/images/product-comb.jpg",
+            avatar: "/images/review-avatar-2.png",
+            photo: "/images/review-scene-4.png",
             rating: 4,
             product: "Confetti Cat Scratcher",
             text: "Bought this for my senior cat who's picky about textures. She warmed up to it within a day and now naps inside it too. Only wish it came in more color options!",
           },
         ].map((r) => (
-          <div class="bg-card rounded-3xl p-6 border border-border hover:shadow-soft transition-all flex flex-col">
-            <div class="flex items-center gap-1 text-brand-orange text-sm">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill={i < r.rating ? "currentColor" : "none"} stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              ))}
-            </div>
-            <p class="mt-3 text-sm text-muted-foreground leading-relaxed flex-1">"{r.text}"</p>
-            <div class="mt-4 flex items-center gap-3 pt-4 border-t border-border">
+          <div class="group bg-card rounded-[1.75rem] overflow-hidden border border-border hover:shadow-soft transition-all flex flex-col">
+            <div class="aspect-[4/3] overflow-hidden bg-muted">
               <img
-                src={r.avatar}
-                alt={r.name}
-                width="40"
-                height="40"
-                class="w-10 h-10 rounded-full object-cover"
+                src={r.photo}
+                alt={`${r.name} sharing their PawKasa setup`}
+                loading="lazy"
+                class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
-              <div class="flex-1 min-w-0">
-                <div class="font-heading font-bold text-sm text-brand-ink">{r.name}</div>
-                <div class="text-xs text-muted-foreground">Verified buyer</div>
-              </div>
             </div>
-            <a
-              href="/products"
-              class="mt-4 inline-flex items-center gap-1 text-xs font-medium text-brand-orange hover:text-brand-blue transition-colors"
-            >
-              Buy {r.product.split(" ").slice(0, 2).join(" ")}
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-            </a>
+            <div class="p-5 md:p-6 flex flex-col flex-1">
+              <div class="flex items-center gap-1 text-brand-orange text-sm">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill={i < r.rating ? "currentColor" : "none"} stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                ))}
+              </div>
+              <p class="mt-3 text-sm text-muted-foreground leading-relaxed flex-1">"{r.text}"</p>
+              <div class="mt-4 flex items-center gap-3 pt-4 border-t border-border">
+                <img
+                  src={r.avatar}
+                  alt={r.name}
+                  width="40"
+                  height="40"
+                  class="w-10 h-10 rounded-full object-cover"
+                />
+                <div class="flex-1 min-w-0">
+                  <div class="font-heading font-bold text-sm text-brand-ink">{r.name}</div>
+                  <div class="text-xs text-muted-foreground">Verified buyer</div>
+                </div>
+              </div>
+              <a
+                href="/products"
+                class="mt-4 inline-flex items-center gap-1 text-xs font-medium text-brand-orange hover:text-brand-blue transition-colors"
+              >
+                Buy {r.product.split(" ").slice(0, 2).join(" ")}
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </a>
+            </div>
           </div>
         ))}
       </div>
     </section>
 
     {/* CERTIFICATIONS */}
-    <section class="container mx-auto px-6 py-24">
-      <div class="max-w-3xl">
+    <section class="container mx-auto px-6 py-12 md:py-14">
+      <div class="max-w-3xl mb-6 md:mb-8">
         <p class="text-sm font-medium uppercase tracking-widest text-brand-blue flex items-center gap-2">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           Trust & Quality
@@ -341,38 +403,85 @@ import SubscriptionPopup from '../components/SubscriptionPopup.astro';
         <h2 class="mt-3 font-heading font-bold text-4xl md:text-5xl leading-tight text-brand-ink">
           Built in world-class facilities.
         </h2>
-        <p class="mt-6 text-lg text-muted-foreground">
+        <p class="mt-4 text-lg text-muted-foreground">
           Every PawKasa product is manufactured in large-scale, internationally
           certified factories — ensuring the highest standards of safety, sustainability,
           and quality control at every step.
         </p>
       </div>
-      <div class="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
-        {[
-          { icon: "🌳", name: "FSC Certified", desc: "Responsible forestry" },
-          { icon: "🛡️", name: "Non-Toxic", desc: "Safe for cats & homes" },
-          { icon: "🏭", name: "BSCI Certified", desc: "Ethical manufacturing" },
-          { icon: "✅", name: "ISO 9001", desc: "Quality management" },
-        ].map((c) => (
-          <div class="aspect-square rounded-3xl bg-brand-ink text-brand-cream flex flex-col items-center justify-center p-6 text-center">
-            <div class="text-4xl mb-3">{c.icon}</div>
-            <div class="font-display font-bold text-lg">{c.name}</div>
-            <div class="text-xs opacity-70 mt-1">{c.desc}</div>
-          </div>
-        ))}
-      </div>
-      <div class="mt-6 flex justify-center">
-        <div class="bg-card rounded-2xl px-8 py-4 border border-border inline-flex items-center gap-4">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-orange"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-          <span class="font-heading font-bold text-brand-ink">Secure Payment</span>
-          <span class="text-sm text-muted-foreground">PCI DSS compliant · SSL encrypted</span>
+      <div class="overflow-hidden rounded-[1.75rem] border border-[#eadfce] bg-[#f7efe2]">
+        <div class="grid grid-cols-2 lg:grid-cols-5 divide-y lg:divide-y-0 lg:divide-x divide-[#e5d7c3]">
+          {[
+            {
+              icon: (
+                <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M5 22V8"/>
+                  <path d="M5 8c0-2.8 2.3-5 5-5 1.8 0 3.4 1 4.3 2.5C15 7.5 17 8.7 17 11c0 2.2-1.8 4-4 4H5"/>
+                </svg>
+              ),
+              name: "FSC Certified",
+              desc: "Sustainable Wood",
+            },
+            {
+              icon: (
+                <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="9"/>
+                  <path d="M8 13c2.2-4.2 5.8-4.2 8 0"/>
+                  <path d="M9 9.5c1.2 1.1 2.3 1.6 3 1.6s1.8-.5 3-1.6"/>
+                </svg>
+              ),
+              name: "Non-Toxic",
+              desc: "Materials",
+            },
+            {
+              icon: (
+                <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="7" width="18" height="12" rx="2"/>
+                  <path d="M7 7V5h10v2"/>
+                  <circle cx="12" cy="13" r="3"/>
+                  <path d="M14.7 12.1 16 10.8"/>
+                </svg>
+              ),
+              name: "BSCI Certified",
+              desc: "Factory",
+            },
+            {
+              icon: (
+                <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="9"/>
+                  <path d="M12 7v5l3 2"/>
+                  <path d="M9.5 4.5h5"/>
+                </svg>
+              ),
+              name: "ISO 9001",
+              desc: "Quality Management",
+            },
+            {
+              icon: (
+                <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="4" y="7" width="16" height="12" rx="2"/>
+                  <path d="M8 7V5h8v2"/>
+                  <circle cx="12" cy="13" r="2"/>
+                  <path d="M14 13l2 2"/>
+                </svg>
+              ),
+              name: "Secure Payment",
+              desc: "SSL Encrypted",
+            },
+          ].map((c) => (
+            <div class="flex min-h-[128px] flex-col items-center justify-center px-4 py-6 text-center lg:px-5">
+              <div class="text-brand-ink/90">{c.icon}</div>
+              <div class="mt-3 font-heading text-[15px] md:text-base font-bold text-brand-ink leading-tight">{c.name}</div>
+              <div class="mt-1 text-xs md:text-sm text-brand-ink/70">{c.desc}</div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
 
     {/* CTA */}
-    <section class="container mx-auto px-6 pb-24">
-      <div class="relative rounded-[2.5rem] p-10 md:p-16 text-center overflow-hidden bg-gradient-to-br from-brand-orange via-brand-orange to-brand-cream">
+    <section class="container mx-auto px-6 pb-16 md:pb-20">
+      <div class="relative rounded-[2.5rem] p-8 md:p-12 text-center overflow-hidden bg-gradient-to-br from-brand-orange via-brand-orange to-brand-cream">
         {/* Decorative cats */}
         <div class="absolute top-4 left-8 text-7xl opacity-40 rotate-[-15deg]">🐱</div>
         <div class="absolute top-8 right-10 text-6xl opacity-30 rotate-[10deg]">🐈</div>
