@@ -71,19 +71,11 @@ const categoryImages = categoryCharacters
     </section>
 
     {/* WHY PAWKASA */}
-    <section class="container mx-auto px-6 py-14 md:py-16">
-      <div class="mb-8 md:mb-10">
-        <p class="text-sm font-medium uppercase tracking-widest text-brand-orange">Why PawKasa</p>
-        <h2 class="mt-3 font-heading font-bold text-4xl md:text-5xl text-brand-ink">
-          Built for cats. Loved by homes.
-        </h2>
-        <p class="mt-4 text-lg text-muted-foreground">
-          Every detail is designed to satisfy your cat's instincts and fit beautifully into your life.
-        </p>
-      </div>
-      <div class="overflow-hidden rounded-[2rem] border border-border bg-card shadow-sm">
+    <section class="py-0">
+      <div class="w-full overflow-hidden bg-card">
         {[
           {
+            sectionLabel: "Why PawKasa",
             eyebrow: "Sustainable comfort",
             title: "Eco-friendly materials",
             text: "Made from recycled cardboard and non-toxic adhesives, each scratcher is safe for daily play and gentle on the planet.",
@@ -115,7 +107,12 @@ const categoryImages = categoryCharacters
           },
         ].map((item) => (
           <article class={`group grid overflow-hidden border-b border-border last:border-b-0 transition-colors hover:bg-muted/40 md:grid-cols-2 ${item.reverse ? "md:[&>div:first-child]:order-2" : ""}`}>
-            <div class="flex min-h-[260px] flex-col justify-center p-7 md:min-h-[340px] md:p-10 lg:p-12">
+            <div class="flex min-h-[260px] flex-col justify-center px-6 py-8 md:min-h-[380px] md:px-[8vw] md:py-10 lg:min-h-[440px]">
+              {item.sectionLabel && (
+                <p class="mb-6 text-sm font-medium uppercase tracking-widest text-brand-orange">
+                  {item.sectionLabel}
+                </p>
+              )}
               <div class="mb-6 h-1.5 w-14 rounded-full bg-brand-orange transition-all duration-300 group-hover:w-20"></div>
               <p class="text-xs font-medium uppercase tracking-widest text-brand-orange">
                 {item.eyebrow}
@@ -127,7 +124,7 @@ const categoryImages = categoryCharacters
                 {item.text}
               </p>
             </div>
-            <div class="min-h-[240px] overflow-hidden bg-muted md:min-h-[340px]">
+            <div class="min-h-[240px] overflow-hidden bg-muted md:min-h-[380px] lg:min-h-[440px]">
               <img
                 src={item.image}
                 alt={item.imageAlt}
@@ -141,9 +138,9 @@ const categoryImages = categoryCharacters
     </section>
 
     {/* SHOP + PRODUCTS */}
-    <section class="container mx-auto px-6 py-10 md:py-12">
-      <div class="space-y-5">
-        <div class="rounded-[1.75rem] bg-card/70 px-4 py-4 shadow-sm md:px-5">
+    <section class="container mx-auto px-6 py-8 md:py-10">
+      <div class="rounded-[1.75rem] bg-card/55 px-4 py-4 md:px-5 md:py-5">
+        <div>
           <div class="mb-3 flex items-end justify-between gap-3">
             <div>
             <p class="text-xs font-medium uppercase tracking-widest text-brand-orange">Shop by Category</p>
@@ -158,13 +155,13 @@ const categoryImages = categoryCharacters
           </div>
           <div class="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
             {[
-              { name: "City Life", desc: "Urban essentials" },
-              { name: "Wander Paws", desc: "Adventure ready" },
-              { name: "Game Day", desc: "Sport & play" },
-              { name: "Pawty Time", desc: "Celebrate fun" },
+              { name: "City Life" },
+              { name: "Wander Paws" },
+              { name: "Game Day" },
+              { name: "Pawty Time" },
             ].map((c, index) => (
-              <a href="/products" class="group block overflow-hidden rounded-2xl border border-border/60 bg-background/70 p-2.5 text-center transition-all hover:border-brand-orange/30 hover:bg-background hover:shadow-soft">
-                <span class="flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-xl bg-muted/70">
+              <a href="/products" class="group block text-center">
+                <span class="flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-2xl bg-muted/70">
                   <img
                     src={categoryImages[index].image}
                     alt={`${categoryImages[index].name} character for ${c.name}`}
@@ -174,14 +171,13 @@ const categoryImages = categoryCharacters
                 </span>
                 <span class="mt-2 block min-w-0">
                   <span class="block truncate font-heading text-sm font-bold leading-tight text-brand-ink md:text-base">{c.name}</span>
-                  <span class="mt-0.5 block truncate text-[11px] text-muted-foreground md:text-xs">{c.desc}</span>
                 </span>
               </a>
             ))}
           </div>
         </div>
 
-        <div class="rounded-[1.75rem] bg-card px-4 py-4 shadow-sm md:px-5 md:py-5">
+        <div class="mt-5">
           <div class="mb-3 flex items-center justify-between gap-3">
             <h3 class="font-heading text-2xl font-bold text-brand-ink md:text-3xl">Best Sellers</h3>
             <a href="/products" class="inline-flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-brand-orange">
@@ -218,8 +214,8 @@ const categoryImages = categoryCharacters
           </div>
         </div>
 
-        <div class="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(240px,0.38fr)]">
-          <div class="rounded-[1.75rem] bg-card px-4 py-4 shadow-sm md:px-5 md:py-5">
+        <div class="mt-5">
+          <div>
             <div class="mb-3 flex items-center justify-between gap-3">
               <h3 class="font-heading text-2xl font-bold text-brand-ink md:text-3xl">New Arrivals</h3>
               <a href="/products" class="inline-flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-brand-orange">
@@ -254,27 +250,6 @@ const categoryImages = categoryCharacters
               ))}
             </div>
           </div>
-
-          <a href="/products" class="group relative flex min-h-[260px] overflow-hidden rounded-[1.75rem] bg-gradient-to-br from-[#ffe1a8] via-[#ffd88a] to-[#ffc96b] p-6 shadow-sm transition-transform hover:-translate-y-0.5">
-            <div class="relative z-10 flex max-w-[220px] flex-col items-start">
-              <p class="text-sm font-bold text-brand-ink/70">Limited Time Offer!</p>
-              <h3 class="mt-5 font-heading text-3xl font-bold leading-tight text-brand-ink md:text-4xl">
-                Get 10% OFF Your First Order
-              </h3>
-              <span class="mt-6 inline-flex items-center gap-2 rounded-full bg-brand-orange px-5 py-3 text-sm font-bold text-white transition-colors group-hover:bg-brand-ink">
-                Shop Now
-                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-              </span>
-            </div>
-            <img
-              src="/images/character/LIlPeep_main.png"
-              alt="PawKasa cat character"
-              loading="lazy"
-              class="absolute bottom-0 right-2 h-36 w-36 object-contain transition-transform duration-500 group-hover:scale-105 md:h-44 md:w-44"
-            />
-            <div class="absolute -right-10 top-8 h-40 w-40 rounded-full bg-white/20"></div>
-            <div class="absolute bottom-8 right-20 text-3xl text-brand-orange/60">♡</div>
-          </a>
         </div>
       </div>
     </section>
@@ -410,7 +385,7 @@ const categoryImages = categoryCharacters
         </p>
       </div>
       <div class="overflow-hidden rounded-[1.75rem] border border-[#eadfce] bg-[#f7efe2]">
-        <div class="grid grid-cols-2 lg:grid-cols-5 divide-y lg:divide-y-0 lg:divide-x divide-[#e5d7c3]">
+        <div class="grid grid-cols-1 divide-y divide-[#e5d7c3] md:grid-cols-5 md:divide-x md:divide-y-0">
           {[
             {
               icon: (
@@ -469,10 +444,12 @@ const categoryImages = categoryCharacters
               desc: "SSL Encrypted",
             },
           ].map((c) => (
-            <div class="flex min-h-[128px] flex-col items-center justify-center px-4 py-6 text-center lg:px-5">
+            <div class="flex min-h-[92px] items-center gap-4 px-5 py-4 text-left md:min-h-[128px] md:flex-col md:justify-center md:gap-0 md:px-3 md:py-6 md:text-center lg:px-5">
               <div class="text-brand-ink/90">{c.icon}</div>
-              <div class="mt-3 font-heading text-[15px] md:text-base font-bold text-brand-ink leading-tight">{c.name}</div>
-              <div class="mt-1 text-xs md:text-sm text-brand-ink/70">{c.desc}</div>
+              <div class="min-w-0 md:mt-3">
+                <div class="font-heading text-[15px] font-bold leading-tight text-brand-ink md:text-base">{c.name}</div>
+                <div class="mt-1 text-xs text-brand-ink/70 md:text-sm">{c.desc}</div>
+              </div>
             </div>
           ))}
         </div>
@@ -480,8 +457,8 @@ const categoryImages = categoryCharacters
     </section>
 
     {/* CTA */}
-    <section class="container mx-auto px-6 pb-16 md:pb-20">
-      <div class="relative rounded-[2.5rem] p-8 md:p-12 text-center overflow-hidden bg-gradient-to-br from-brand-orange via-brand-orange to-brand-cream">
+    <section class="w-full px-0 pb-0">
+      <div class="relative overflow-hidden rounded-t-[2.5rem] bg-gradient-to-br from-brand-orange via-brand-orange to-brand-cream p-8 text-center md:p-12">
         {/* Decorative cats */}
         <div class="absolute top-4 left-8 text-7xl opacity-40 rotate-[-15deg]">🐱</div>
         <div class="absolute top-8 right-10 text-6xl opacity-30 rotate-[10deg]">🐈</div>
