@@ -40,9 +40,14 @@ pawkasa-astro/
     └── pages/
         ├── index.astro         # Homepage (full landing page)
         ├── about.astro         # About / brand story
-        ├── products.astro      # Product listing
+        ├── products.astro      # Product listing + add-to-cart buttons
+        ├── checkout.astro      # Embedded Stripe checkout
+        ├── order/success.astro # Order confirmation
         ├── contact.astro       # Contact page
         └── 404.astro           # Not found page
+└── supabase/
+    ├── migrations/             # Orders and order_items schema
+    └── functions/              # Stripe checkout + webhook edge functions
 ```
 
 ## Architecture
@@ -78,8 +83,10 @@ Layout.astro  ← SEO meta, Open Graph, global CSS
 ### Data Flow
 
 - **Static Data**: Product catalog lives in `src/data/products.ts` as a typed array. Pages import directly.
-- **No external APIs**: All content is static — pages are pre-rendered at build time.
-- **Client-side interactivity**: Header mobile menu, footer subscribe form, and subscription popup use vanilla JS (no framework overhead).
+- **Cart**: Header owns a localStorage-backed cart drawer. Product cards publish `data-cart-add` attributes.
+- **Checkout**: `/checkout` creates an order through Supabase Edge Functions and mounts Stripe Embedded Checkout on the PawKasa page.
+- **Orders**: Supabase stores `orders` and `order_items`; Stripe webhooks update order status after payment.
+- **Client-side interactivity**: Header mobile menu, cart drawer, footer subscribe form, and subscription popup use vanilla JS.
 
 ## Design System
 
@@ -143,6 +150,34 @@ npm run dev       # Start dev server (localhost:4321)
 npm run build     # Production build to dist/
 npm run preview   # Preview production build
 ```
+
+## Checkout Setup
+
+The site uses Stripe Embedded Checkout with Supabase Edge Functions, so customers can pay without leaving PawKasa.
+
+```bash
+supabase db push
+cp .env.example .env
+supabase secrets set STRIPE_SECRET_KEY=sk_test_...
+supabase secrets set STRIPE_WEBHOOK_SECRET=whsec_...
+supabase secrets set SITE_URL=https://pawkasa.com
+supabase functions deploy create-checkout
+supabase functions deploy stripe-webhook
+```
+
+Frontend environment variables:
+
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_PUBLISHABLE_KEY`
+- `VITE_STRIPE_PUBLISHABLE_KEY`
+
+Stripe webhook endpoint:
+
+```text
+https://<project-ref>.supabase.co/functions/v1/stripe-webhook
+```
+
+Subscribe it to `checkout.session.completed` and `checkout.session.expired`.
 
 ## Getting Started
 

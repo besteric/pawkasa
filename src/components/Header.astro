@@ -39,8 +39,9 @@ const currentPath = Astro.url.pathname;
       <button aria-label="Account" class="p-2 hover:text-brand-orange transition-colors hidden sm:inline-flex">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       </button>
-      <button aria-label="Cart" class="p-2 hover:text-brand-orange transition-colors">
+      <button id="cart-open" aria-label="Cart" class="relative p-2 hover:text-brand-orange transition-colors">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span id="cart-count" class="absolute -right-1 -top-1 hidden min-w-5 rounded-full bg-brand-orange px-1.5 py-0.5 text-center text-[10px] font-bold leading-none text-white">0</span>
       </button>
       <button id="mobile-menu-btn" aria-label="Menu" class="md:hidden p-2">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/><line x1="4" x2="20" y1="6" y2="6"/></svg>
@@ -61,6 +62,35 @@ const currentPath = Astro.url.pathname;
   </div>
 </header>
 
+<div id="cart-overlay" class="fixed inset-0 z-[70] hidden bg-brand-ink/35 backdrop-blur-[2px]"></div>
+<aside id="cart-drawer" class="fixed right-0 top-0 z-[80] flex h-dvh w-full max-w-md translate-x-full flex-col bg-background shadow-[0_24px_90px_rgba(0,0,0,0.22)] transition-transform duration-300">
+  <div class="flex items-center justify-between border-b border-border px-5 py-4">
+    <div>
+      <p class="text-xs font-medium uppercase tracking-widest text-brand-orange">PawKasa Cart</p>
+      <h2 class="font-heading text-2xl font-bold text-brand-ink">Your picks</h2>
+    </div>
+    <button id="cart-close" aria-label="Close cart" class="rounded-full p-2 transition-colors hover:bg-muted">
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 6 6 18"/>
+        <path d="M6 6 18 18"/>
+      </svg>
+    </button>
+  </div>
+  <div id="cart-items" class="flex-1 overflow-y-auto px-5 py-4"></div>
+  <div class="border-t border-border px-5 py-5">
+    <div class="mb-3 flex items-center justify-between text-sm text-muted-foreground">
+      <span>Subtotal</span>
+      <span id="cart-subtotal" class="font-bold text-brand-ink">$0.00</span>
+    </div>
+    <p id="cart-shipping-note" class="mb-4 rounded-2xl bg-muted px-4 py-3 text-sm text-muted-foreground">
+      Free US shipping over $50.
+    </p>
+    <a id="cart-checkout" href="/checkout" class="flex h-12 items-center justify-center rounded-full bg-brand-ink px-6 text-sm font-bold text-brand-cream transition-colors hover:bg-brand-orange">
+      Checkout
+    </a>
+  </div>
+</aside>
+
 <script>
   const btn = document.getElementById('mobile-menu-btn');
   const menu = document.getElementById('mobile-menu');
@@ -69,4 +99,153 @@ const currentPath = Astro.url.pathname;
       menu.classList.toggle('hidden');
     });
   }
+
+  type CartItem = {
+    slug: string;
+    name: string;
+    price: number;
+    image: string;
+    quantity: number;
+  };
+
+  const cartKey = 'pawkasa-cart';
+  const cartOpen = document.getElementById('cart-open');
+  const cartClose = document.getElementById('cart-close');
+  const cartOverlay = document.getElementById('cart-overlay');
+  const cartDrawer = document.getElementById('cart-drawer');
+  const cartItems = document.getElementById('cart-items');
+  const cartCount = document.getElementById('cart-count');
+  const cartSubtotal = document.getElementById('cart-subtotal');
+  const cartShippingNote = document.getElementById('cart-shipping-note');
+  const cartCheckout = document.getElementById('cart-checkout') as HTMLAnchorElement | null;
+
+  const money = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+
+  const readCart = (): CartItem[] => {
+    try {
+      return JSON.parse(localStorage.getItem(cartKey) || '[]');
+    } catch {
+      return [];
+    }
+  };
+
+  const writeCart = (items: CartItem[]) => {
+    localStorage.setItem(cartKey, JSON.stringify(items));
+    window.dispatchEvent(new CustomEvent('pawkasa-cart-updated'));
+  };
+
+  const subtotal = (items: CartItem[]) => items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  const renderCart = () => {
+    const items = readCart();
+    const totalQty = items.reduce((sum, item) => sum + item.quantity, 0);
+    const total = subtotal(items);
+
+    if (cartCount) {
+      cartCount.textContent = String(totalQty);
+      cartCount.classList.toggle('hidden', totalQty === 0);
+    }
+
+    if (cartSubtotal) cartSubtotal.textContent = money.format(total);
+    if (cartCheckout) {
+      cartCheckout.classList.toggle('pointer-events-none', totalQty === 0);
+      cartCheckout.classList.toggle('opacity-50', totalQty === 0);
+    }
+    if (cartShippingNote) {
+      cartShippingNote.textContent = total >= 50
+        ? 'Free US shipping unlocked.'
+        : `${money.format(Math.max(0, 50 - total))} away from free US shipping.`;
+    }
+
+    if (!cartItems) return;
+    if (!items.length) {
+      cartItems.innerHTML = `
+        <div class="flex h-full flex-col items-center justify-center text-center">
+          <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-muted text-brand-orange">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          </div>
+          <h3 class="font-heading text-xl font-bold text-brand-ink">Your cart is empty</h3>
+          <p class="mt-2 max-w-xs text-sm text-muted-foreground">Add a scratcher or two, then checkout without leaving PawKasa.</p>
+          <a href="/products" class="mt-5 rounded-full bg-brand-orange px-5 py-2 text-sm font-bold text-white">Shop products</a>
+        </div>
+      `;
+      return;
+    }
+
+    cartItems.innerHTML = items.map((item) => `
+      <div class="grid grid-cols-[72px_1fr] gap-4 border-b border-border py-4 last:border-b-0">
+        <img src="${item.image}" alt="${item.name}" class="h-[72px] w-[72px] rounded-2xl object-cover" />
+        <div class="min-w-0">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <h3 class="font-heading text-base font-bold leading-tight text-brand-ink">${item.name}</h3>
+              <p class="mt-1 text-sm text-muted-foreground">${money.format(item.price)}</p>
+            </div>
+            <button class="cart-remove text-sm font-medium text-muted-foreground hover:text-brand-orange" data-slug="${item.slug}">Remove</button>
+          </div>
+          <div class="mt-3 inline-flex items-center overflow-hidden rounded-full border border-border">
+            <button class="cart-qty px-3 py-1.5 text-sm" data-slug="${item.slug}" data-delta="-1">-</button>
+            <span class="min-w-8 px-2 text-center text-sm font-bold">${item.quantity}</span>
+            <button class="cart-qty px-3 py-1.5 text-sm" data-slug="${item.slug}" data-delta="1">+</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  };
+
+  const openCart = () => {
+    cartOverlay?.classList.remove('hidden');
+    cartDrawer?.classList.remove('translate-x-full');
+  };
+
+  const closeCart = () => {
+    cartOverlay?.classList.add('hidden');
+    cartDrawer?.classList.add('translate-x-full');
+  };
+
+  document.addEventListener('click', (event) => {
+    const target = event.target as HTMLElement;
+    const addButton = target.closest('[data-cart-add]') as HTMLElement | null;
+    const qtyButton = target.closest('.cart-qty') as HTMLElement | null;
+    const removeButton = target.closest('.cart-remove') as HTMLElement | null;
+
+    if (addButton) {
+      const product: CartItem = {
+        slug: addButton.dataset.slug || '',
+        name: addButton.dataset.name || '',
+        price: Number(addButton.dataset.price || 0),
+        image: addButton.dataset.image || '',
+        quantity: 1,
+      };
+      if (!product.slug) return;
+
+      const items = readCart();
+      const existing = items.find((item) => item.slug === product.slug);
+      if (existing) existing.quantity = Math.min(10, existing.quantity + 1);
+      else items.push(product);
+      writeCart(items);
+      openCart();
+    }
+
+    if (qtyButton) {
+      const slug = qtyButton.dataset.slug;
+      const delta = Number(qtyButton.dataset.delta || 0);
+      const items = readCart()
+        .map((item) => item.slug === slug ? { ...item, quantity: item.quantity + delta } : item)
+        .filter((item) => item.quantity > 0);
+      writeCart(items);
+    }
+
+    if (removeButton) {
+      const slug = removeButton.dataset.slug;
+      writeCart(readCart().filter((item) => item.slug !== slug));
+    }
+  });
+
+  cartOpen?.addEventListener('click', openCart);
+  cartClose?.addEventListener('click', closeCart);
+  cartOverlay?.addEventListener('click', closeCart);
+  window.addEventListener('pawkasa-cart-updated', renderCart);
+  window.addEventListener('storage', renderCart);
+  renderCart();
 </script>

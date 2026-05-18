@@ -1,0 +1,174 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL ?? "";
+const stripePublishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY ?? "";
+---
+
+<Layout title="Checkout — PawKasa" description="Complete your PawKasa order without leaving our site.">
+  <Header />
+  <main class="min-h-screen bg-background">
+    <section class="container mx-auto grid gap-8 px-6 py-10 lg:grid-cols-[0.9fr_1.1fr] lg:py-14">
+      <div>
+        <p class="text-xs font-medium uppercase tracking-widest text-brand-orange">Secure checkout</p>
+        <h1 class="mt-3 font-heading text-4xl font-bold leading-tight text-brand-ink md:text-5xl">
+          Finish your PawKasa order.
+        </h1>
+        <p class="mt-4 max-w-xl text-muted-foreground">
+          Review your cart, then complete payment in the embedded Stripe checkout below.
+          Your order stays on PawKasa from cart to confirmation.
+        </p>
+
+        <div class="mt-8 rounded-[1.75rem] border border-border bg-card p-5 shadow-sm">
+          <div class="mb-4 flex items-center justify-between">
+            <h2 class="font-heading text-2xl font-bold text-brand-ink">Order summary</h2>
+            <a href="/products" class="text-sm font-medium text-brand-orange hover:text-brand-blue">Edit cart</a>
+          </div>
+          <div id="checkout-items" class="space-y-4"></div>
+          <div class="mt-5 space-y-2 border-t border-border pt-4 text-sm">
+            <div class="flex justify-between text-muted-foreground">
+              <span>Subtotal</span>
+              <span id="checkout-subtotal">$0.00</span>
+            </div>
+            <div class="flex justify-between text-muted-foreground">
+              <span>Estimated shipping</span>
+              <span id="checkout-shipping">$0.00</span>
+            </div>
+            <div class="flex justify-between text-lg font-bold text-brand-ink">
+              <span>Estimated total</span>
+              <span id="checkout-total">$0.00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rounded-[1.75rem] border border-border bg-white p-4 shadow-soft md:p-6">
+        <div id="checkout-setup" class="hidden rounded-2xl bg-brand-cream/50 p-4 text-sm text-brand-ink">
+          Stripe is not configured yet. Add <code>VITE_STRIPE_PUBLISHABLE_KEY</code> to your environment and deploy the Supabase checkout function.
+        </div>
+        <div id="checkout-empty" class="hidden rounded-2xl bg-muted p-6 text-center">
+          <h2 class="font-heading text-2xl font-bold text-brand-ink">Your cart is empty</h2>
+          <p class="mt-2 text-sm text-muted-foreground">Add a product before starting checkout.</p>
+          <a href="/products" class="mt-5 inline-flex h-11 items-center justify-center rounded-full bg-brand-orange px-5 text-sm font-bold text-white">
+            Shop products
+          </a>
+        </div>
+        <div id="checkout-error" class="hidden rounded-2xl bg-red-50 p-4 text-sm text-red-700"></div>
+        <button id="checkout-start" class="flex h-12 w-full items-center justify-center rounded-full bg-brand-ink px-6 text-sm font-bold text-brand-cream transition-colors hover:bg-brand-orange">
+          Start secure payment
+        </button>
+        <div id="stripe-checkout" class="mt-5"></div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<script define:vars={{ supabaseUrl, stripePublishableKey }}>
+  const money = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+  const cartKey = 'pawkasa-cart';
+  const checkoutItems = document.getElementById('checkout-items');
+  const checkoutSubtotal = document.getElementById('checkout-subtotal');
+  const checkoutShipping = document.getElementById('checkout-shipping');
+  const checkoutTotal = document.getElementById('checkout-total');
+  const checkoutStart = document.getElementById('checkout-start');
+  const checkoutEmpty = document.getElementById('checkout-empty');
+  const checkoutSetup = document.getElementById('checkout-setup');
+  const checkoutError = document.getElementById('checkout-error');
+  const stripeMount = document.getElementById('stripe-checkout');
+
+  const readCart = () => {
+    try {
+      return JSON.parse(localStorage.getItem(cartKey) || '[]');
+    } catch {
+      return [];
+    }
+  };
+
+  const items = readCart();
+  const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const shipping = subtotal >= 50 || subtotal === 0 ? 0 : 6.95;
+
+  if (checkoutItems) {
+    checkoutItems.innerHTML = items.map((item) => `
+      <div class="grid grid-cols-[64px_1fr_auto] items-center gap-3">
+        <img src="${item.image}" alt="${item.name}" class="h-16 w-16 rounded-2xl object-cover" />
+        <div class="min-w-0">
+          <h3 class="truncate font-heading font-bold text-brand-ink">${item.name}</h3>
+          <p class="text-sm text-muted-foreground">Qty ${item.quantity}</p>
+        </div>
+        <div class="font-bold text-brand-ink">${money.format(item.price * item.quantity)}</div>
+      </div>
+    `).join('');
+  }
+
+  if (checkoutSubtotal) checkoutSubtotal.textContent = money.format(subtotal);
+  if (checkoutShipping) checkoutShipping.textContent = shipping === 0 ? 'Free' : money.format(shipping);
+  if (checkoutTotal) checkoutTotal.textContent = money.format(subtotal + shipping);
+
+  if (!items.length) {
+    checkoutEmpty?.classList.remove('hidden');
+    checkoutStart?.classList.add('hidden');
+  }
+
+  if (!stripePublishableKey || !supabaseUrl) {
+    checkoutSetup?.classList.remove('hidden');
+    checkoutStart?.classList.add('hidden');
+  }
+
+  const showError = (message) => {
+    if (!checkoutError) return;
+    checkoutError.textContent = message;
+    checkoutError.classList.remove('hidden');
+  };
+
+  const loadStripeScript = () => new Promise((resolve, reject) => {
+    if (window.Stripe) {
+      resolve();
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = 'https://js.stripe.com/v3/';
+    script.async = true;
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error('Could not load Stripe.js'));
+    document.head.appendChild(script);
+  });
+
+  checkoutStart?.addEventListener('click', async () => {
+    checkoutStart.disabled = true;
+    checkoutStart.textContent = 'Preparing secure checkout...';
+    checkoutError?.classList.add('hidden');
+
+    try {
+      await loadStripeScript();
+      const response = await fetch(`${supabaseUrl}/functions/v1/create-checkout`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: items.map((item) => ({ slug: item.slug, quantity: item.quantity })),
+        }),
+      });
+
+      const payload = await response.json();
+      if (!response.ok) {
+        throw new Error(payload.error || 'Could not start checkout');
+      }
+
+      const stripe = window.Stripe(stripePublishableKey);
+      const checkout = await stripe.initEmbeddedCheckout({
+        clientSecret: payload.clientSecret,
+      });
+
+      stripeMount?.replaceChildren();
+      checkout.mount('#stripe-checkout');
+      checkoutStart.classList.add('hidden');
+    } catch (error) {
+      checkoutStart.disabled = false;
+      checkoutStart.textContent = 'Start secure payment';
+      showError(error instanceof Error ? error.message : 'Checkout failed. Please try again.');
+    }
+  });
+</script>

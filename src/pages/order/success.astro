@@ -1,0 +1,34 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+---
+
+<Layout title="Order Confirmed — PawKasa" description="Your PawKasa order has been received.">
+  <Header />
+  <main class="min-h-screen bg-background">
+    <section class="container mx-auto px-6 py-20 text-center md:py-28">
+      <p class="text-xs font-medium uppercase tracking-widest text-brand-orange">Order received</p>
+      <h1 class="mx-auto mt-3 max-w-3xl font-heading text-4xl font-bold leading-tight text-brand-ink md:text-6xl">
+        Thank you for your PawKasa order.
+      </h1>
+      <p class="mx-auto mt-5 max-w-xl text-lg text-muted-foreground">
+        We are preparing your confirmation now. A receipt and order details will arrive by email after payment is confirmed.
+      </p>
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
+        <a href="/products" class="inline-flex h-12 items-center justify-center rounded-full bg-brand-ink px-7 text-sm font-bold text-brand-cream transition-colors hover:bg-brand-orange">
+          Continue shopping
+        </a>
+        <a href="/" class="inline-flex h-12 items-center justify-center rounded-full border border-brand-ink px-7 text-sm font-bold text-brand-ink transition-colors hover:bg-brand-ink hover:text-brand-cream">
+          Back home
+        </a>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<script>
+  localStorage.removeItem('pawkasa-cart');
+  window.dispatchEvent(new CustomEvent('pawkasa-cart-updated'));
+</script>
