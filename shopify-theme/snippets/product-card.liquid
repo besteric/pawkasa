@@ -1,0 +1,31 @@
+{% assign active_product = product_card | default: product %}
+
+<article class="product-card">
+  <a class="product-card__image" href="{{ active_product.url }}">
+    {% if active_product.featured_media %}
+      {{ active_product.featured_media | image_url: width: 900 | image_tag: loading: 'lazy', alt: active_product.title }}
+    {% else %}
+      {{ 'product-mist.jpg' | asset_url | image_tag: loading: 'lazy', alt: active_product.title }}
+    {% endif %}
+  </a>
+  <div class="product-card__body">
+    {% if active_product.collections.first %}
+      <p class="eyebrow">{{ active_product.collections.first.title }}</p>
+    {% endif %}
+    <a href="{{ active_product.url }}">
+      <h3>{{ active_product.title }}</h3>
+    </a>
+    {% if active_product.description != blank %}
+      <p>{{ active_product.description | strip_html | truncate: 96 }}</p>
+    {% endif %}
+    <div class="product-card__footer">
+      <strong>{{ active_product.price | money }}</strong>
+      {% form 'product', active_product, class: 'product-card__form' %}
+        <input type="hidden" name="id" value="{{ active_product.selected_or_first_available_variant.id }}">
+        <button class="button button--primary" type="submit" {% unless active_product.available %}disabled{% endunless %}>
+          {% if active_product.available %}Add{% else %}Sold out{% endif %}
+        </button>
+      {% endform %}
+    </div>
+  </div>
+</article>

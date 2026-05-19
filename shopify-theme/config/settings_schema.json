@@ -1,0 +1,28 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "PawKasa Shopify",
+    "theme_version": "1.0.0",
+    "theme_author": "PawKasa",
+    "theme_documentation_url": "https://pawkasa.com",
+    "theme_support_url": "mailto:hello@pawkasa.com"
+  },
+  {
+    "name": "Brand",
+    "settings": [
+      { "type": "color", "id": "brand_orange", "label": "Brand orange", "default": "#ff6f2c" },
+      { "type": "color", "id": "brand_cream", "label": "Brand cream", "default": "#ffd866" },
+      { "type": "color", "id": "brand_blue", "label": "Brand blue", "default": "#8bd4e6" },
+      { "type": "color", "id": "brand_ink", "label": "Brand ink", "default": "#4f362c" }
+    ]
+  },
+  {
+    "name": "Social media",
+    "settings": [
+      { "type": "url", "id": "social_instagram_link", "label": "Instagram" },
+      { "type": "url", "id": "social_tiktok_link", "label": "TikTok" },
+      { "type": "url", "id": "social_youtube_link", "label": "YouTube" },
+      { "type": "url", "id": "social_pinterest_link", "label": "Pinterest" }
+    ]
+  }
+]

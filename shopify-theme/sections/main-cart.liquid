@@ -1,0 +1,44 @@
+<section class="cart-page page-width">
+  <div class="page-hero page-hero--simple">
+    <p class="eyebrow">Cart</p>
+    <h1>Your PawKasa cart</h1>
+  </div>
+
+  {% if cart.item_count == 0 %}
+    <div class="empty-cart empty-cart--page">
+      <h2>Your cart is empty</h2>
+      <p>Add a scratcher or two before checking out.</p>
+      <a class="button button--primary" href="{{ routes.all_products_collection_url }}">Shop products</a>
+    </div>
+  {% else %}
+    <form action="{{ routes.cart_url }}" method="post" novalidate class="cart-form">
+      <div class="cart-lines">
+        {% for item in cart.items %}
+          <div class="cart-page-line">
+            {{ item.image | image_url: width: 220 | image_tag: loading: 'lazy', alt: item.product.title }}
+            <div>
+              <a href="{{ item.url }}"><h2>{{ item.product.title }}</h2></a>
+              <p>{{ item.final_price | money }}</p>
+              <label for="Quantity-{{ item.index | plus: 1 }}">Quantity</label>
+              <input id="Quantity-{{ item.index | plus: 1 }}" type="number" name="updates[]" value="{{ item.quantity }}" min="0">
+            </div>
+            <strong>{{ item.final_line_price | money }}</strong>
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="cart-summary">
+        <div><span>Subtotal</span><strong>{{ cart.total_price | money }}</strong></div>
+        <p>Taxes, discounts, shipping, and payment methods are calculated in Shopify checkout.</p>
+        <button class="button button--outline" type="submit" name="update">Update cart</button>
+        <button class="button button--primary" type="submit" name="checkout">Checkout</button>
+      </div>
+    </form>
+  {% endif %}
+</section>
+
+{% schema %}
+{
+  "name": "Main cart"
+}
+{% endschema %}

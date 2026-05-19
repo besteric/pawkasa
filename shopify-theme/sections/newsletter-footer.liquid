@@ -1,0 +1,68 @@
+<section class="footer-newsletter">
+  <div class="page-width footer-newsletter__grid">
+    <div class="footer-newsletter__art">
+      {% if section.settings.newsletter_image != blank %}
+        {{ section.settings.newsletter_image | image_url: width: 1200 | image_tag: loading: 'lazy', alt: section.settings.heading }}
+      {% else %}
+        {{ 'newsletter-cat-box.png' | asset_url | image_tag: loading: 'lazy', alt: section.settings.heading }}
+      {% endif %}
+    </div>
+    <div class="footer-newsletter__copy">
+      <h2>{{ section.settings.heading }} <span>♡</span></h2>
+      <p>{{ section.settings.text }}</p>
+      {% form 'customer', class: 'newsletter-form' %}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        <label>
+          <span class="visually-hidden">Email</span>
+          <input type="email" name="contact[email]" autocomplete="email" placeholder="Enter your email" required>
+        </label>
+        <button type="submit">Subscribe <span>🐾</span></button>
+      {% endform %}
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="page-width site-footer__grid">
+    <div>
+      <a class="footer-brand" href="{{ routes.root_url }}">{{ shop.name | default: 'PawKasa' }}</a>
+      <div class="socials">
+        <a href="{{ settings.social_instagram_link }}" aria-label="Instagram">IG</a>
+        <a href="{{ settings.social_tiktok_link }}" aria-label="TikTok">TT</a>
+        <a href="{{ settings.social_youtube_link }}" aria-label="YouTube">YT</a>
+        <a href="{{ settings.social_pinterest_link }}" aria-label="Pinterest">PI</a>
+      </div>
+    </div>
+    <div>
+      <h3>Company</h3>
+      <ul>
+        {% for link in section.settings.footer_menu.links %}
+          <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div>
+      <h3>Contact Us</h3>
+      <p>Have a question? Ask our hoomans. <span>♡</span></p>
+      <p>{{ section.settings.email }}</p>
+      <p>{{ section.settings.hours }}</p>
+      <p>{{ section.settings.address }}</p>
+    </div>
+  </div>
+  <div class="copyright">© {{ 'now' | date: '%Y' }} {{ shop.name | upcase }}. All rights reserved. 🐾</div>
+</footer>
+
+{% schema %}
+{
+  "name": "Newsletter + footer",
+  "settings": [
+    { "type": "image_picker", "id": "newsletter_image", "label": "Newsletter image" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Join the Secret Service." },
+    { "type": "text", "id": "text", "label": "Text", "default": "Subscribe and get a discount on your first order!" },
+    { "type": "link_list", "id": "footer_menu", "label": "Footer menu", "default": "footer" },
+    { "type": "text", "id": "email", "label": "Email", "default": "hello@pawkasa.com" },
+    { "type": "textarea", "id": "hours", "label": "Hours", "default": "Mon - Fri: 9AM - 6PM (PST)\nSat - Sun: 10AM - 4PM (PST)" },
+    { "type": "textarea", "id": "address", "label": "Address", "default": "123 Kitty Lane, Meow Town,\nCA 90210, USA" }
+  ]
+}
+{% endschema %}

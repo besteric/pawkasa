@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "hero": { "type": "hero" },
+    "why": { "type": "why-pawkasa" },
+    "products": { "type": "shop-products" },
+    "story": { "type": "brand-story" },
+    "reviews": { "type": "customer-reviews" },
+    "trust": { "type": "trust-quality" }
+  },
+  "order": ["hero", "why", "products", "story", "reviews", "trust"]
+}

@@ -1,0 +1,55 @@
+{% assign fallback_images = 'why-eco-materials.png,why-scratch-play-hide.png,why-indoor-cats.png,why-easy-assemble.png' | split: ',' %}
+
+<section class="why">
+  {% for block in section.blocks %}
+    {% assign image_index = forloop.index0 %}
+    <article class="why__row {% if block.settings.reverse %}why__row--reverse{% endif %}" {{ block.shopify_attributes }}>
+      <div class="why__copy">
+        {% if forloop.first %}
+          <p class="eyebrow">Why PawKasa</p>
+        {% endif %}
+        <div class="accent-line"></div>
+        <p class="eyebrow">{{ block.settings.eyebrow }}</p>
+        <h2>{{ block.settings.title }}</h2>
+        <p>{{ block.settings.text }}</p>
+      </div>
+      <div class="why__media">
+        {% if block.settings.image != blank %}
+          {{ block.settings.image | image_url: width: 1600 | image_tag: loading: 'lazy', alt: block.settings.title }}
+        {% else %}
+          {{ fallback_images[image_index] | asset_url | image_tag: loading: 'lazy', alt: block.settings.title }}
+        {% endif %}
+      </div>
+    </article>
+  {% endfor %}
+</section>
+
+{% schema %}
+{
+  "name": "Why PawKasa",
+  "blocks": [
+    {
+      "type": "reason",
+      "name": "Reason",
+      "settings": [
+        { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Sustainable comfort" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Eco-friendly materials" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Made from recycled cardboard and non-toxic adhesives, each scratcher is safe for daily play and gentle on the planet." },
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "checkbox", "id": "reverse", "label": "Reverse layout", "default": false }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Why PawKasa",
+      "blocks": [
+        { "type": "reason" },
+        { "type": "reason", "settings": { "eyebrow": "Instinct-led design", "title": "Scratch, play, and hide in one place", "reverse": true } },
+        { "type": "reason", "settings": { "eyebrow": "Home-friendly scale", "title": "Designed for indoor cats" } },
+        { "type": "reason", "settings": { "eyebrow": "Simple setup", "title": "Easy to assemble", "reverse": true } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,49 @@
+<section class="trust page-width">
+  <div class="trust__copy">
+    <p class="eyebrow">Trust & Quality</p>
+    <h2>{{ section.settings.heading }}</h2>
+    <p>{{ section.settings.text }}</p>
+  </div>
+  <div class="trust-grid">
+    {% for block in section.blocks %}
+      <div class="trust-item" {{ block.shopify_attributes }}>
+        <span aria-hidden="true">{{ block.settings.icon }}</span>
+        <strong>{{ block.settings.title }}</strong>
+        <small>{{ block.settings.caption }}</small>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Trust & Quality",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Built in world-class facilities." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Every PawKasa product is manufactured in large-scale, internationally certified factories — ensuring the highest standards of safety, sustainability, and quality control at every step." }
+  ],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Badge",
+      "settings": [
+        { "type": "text", "id": "icon", "label": "Icon text", "default": "FSC" },
+        { "type": "text", "id": "title", "label": "Title", "default": "FSC Certified" },
+        { "type": "text", "id": "caption", "label": "Caption", "default": "Sustainable Wood" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust & Quality",
+      "blocks": [
+        { "type": "badge", "settings": { "icon": "FSC", "title": "FSC Certified", "caption": "Sustainable Wood" } },
+        { "type": "badge", "settings": { "icon": "Leaf", "title": "Non-Toxic", "caption": "Materials" } },
+        { "type": "badge", "settings": { "icon": "BSCI", "title": "BSCI Certified", "caption": "Factory" } },
+        { "type": "badge", "settings": { "icon": "ISO", "title": "ISO 9001", "caption": "Quality Management" } },
+        { "type": "badge", "settings": { "icon": "SSL", "title": "Secure Payment", "caption": "SSL Encrypted" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

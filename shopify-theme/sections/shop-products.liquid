@@ -1,0 +1,78 @@
+{% assign category_images = 'Lala_03.png,Udon_03.png,Tracer_03.png,LIlPeep_main.png,Toto_03.png' | split: ',' %}
+
+<section class="shop-products page-width">
+  <div class="section-head">
+    <p class="eyebrow">Shop by Category</p>
+    <a href="{{ routes.collections_url }}">View all →</a>
+  </div>
+  <div class="category-grid">
+    {% for block in section.blocks %}
+      {% assign image_index = forloop.index0 %}
+      <a class="category-tile" href="{{ block.settings.link | default: routes.all_products_collection_url }}" {{ block.shopify_attributes }}>
+        {% if block.settings.image != blank %}
+          {{ block.settings.image | image_url: width: 700 | image_tag: loading: 'lazy', alt: block.settings.title }}
+        {% else %}
+          {{ category_images[image_index] | asset_url | image_tag: loading: 'lazy', alt: block.settings.title }}
+        {% endif %}
+        <span>{{ block.settings.title }}</span>
+      </a>
+    {% endfor %}
+  </div>
+
+  {% if section.settings.best_sellers != blank %}
+    <div class="section-head section-head--products">
+      <h2>Best Sellers</h2>
+      <a href="{{ section.settings.best_sellers.url }}">View all →</a>
+    </div>
+    <div class="product-grid">
+      {% for product in section.settings.best_sellers.products limit: 4 %}
+        {% render 'product-card', product_card: product %}
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% if section.settings.new_arrivals != blank %}
+    <div class="section-head section-head--products">
+      <h2>New Arrivals</h2>
+      <a href="{{ section.settings.new_arrivals.url }}">View all →</a>
+    </div>
+    <div class="product-grid">
+      {% for product in section.settings.new_arrivals.products limit: 4 %}
+        {% render 'product-card', product_card: product %}
+      {% endfor %}
+    </div>
+  {% endif %}
+</section>
+
+{% schema %}
+{
+  "name": "Shop + products",
+  "settings": [
+    { "type": "collection", "id": "best_sellers", "label": "Best sellers collection" },
+    { "type": "collection", "id": "new_arrivals", "label": "New arrivals collection" }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "City Life" },
+        { "type": "url", "id": "link", "label": "Link" },
+        { "type": "image_picker", "id": "image", "label": "Character image" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop + products",
+      "blocks": [
+        { "type": "category", "settings": { "title": "City Life" } },
+        { "type": "category", "settings": { "title": "Wander Paws" } },
+        { "type": "category", "settings": { "title": "Pawty Time" } },
+        { "type": "category", "settings": { "title": "Game Day" } },
+        { "type": "category", "settings": { "title": "Cozy Home" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

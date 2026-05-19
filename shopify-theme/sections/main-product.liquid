@@ -1,0 +1,57 @@
+<section class="product-page page-width">
+  <div class="product-page__media">
+    {% if product.featured_media %}
+      {{ product.featured_media | image_url: width: 1400 | image_tag: loading: 'eager', alt: product.title }}
+    {% endif %}
+    {% if product.media.size > 1 %}
+      <div class="product-thumbs">
+        {% for media in product.media limit: 6 %}
+          {{ media | image_url: width: 180 | image_tag: loading: 'lazy', alt: product.title }}
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="product-page__info">
+    {% if product.collections.first %}
+      <p class="eyebrow">{{ product.collections.first.title }}</p>
+    {% endif %}
+    <h1>{{ product.title }}</h1>
+    <div class="product-price">{{ product.selected_or_first_available_variant.price | money }}</div>
+    <div class="rte">{{ product.description }}</div>
+
+    {% form 'product', product, class: 'product-form', data-product-form: '' %}
+      {% unless product.has_only_default_variant %}
+        <label for="ProductSelect-{{ section.id }}">Options</label>
+        <select id="ProductSelect-{{ section.id }}" name="id">
+          {% for variant in product.variants %}
+            <option value="{{ variant.id }}" {% if variant == product.selected_or_first_available_variant %}selected{% endif %} {% unless variant.available %}disabled{% endunless %}>
+              {{ variant.title }} - {{ variant.price | money }}
+            </option>
+          {% endfor %}
+        </select>
+      {% else %}
+        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+      {% endunless %}
+
+      <label for="Quantity-{{ section.id }}">Quantity</label>
+      <input id="Quantity-{{ section.id }}" type="number" name="quantity" value="1" min="1">
+
+      <button class="button button--primary button--wide" type="submit" {% unless product.available %}disabled{% endunless %}>
+        {% if product.available %}Add to cart{% else %}Sold out{% endif %}
+      </button>
+    {% endform %}
+
+    <div class="product-assurance">
+      <span>Secure Shopify checkout</span>
+      <span>PanPay-ready payment routing</span>
+      <span>US shipping options at checkout</span>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Main product"
+}
+{% endschema %}
